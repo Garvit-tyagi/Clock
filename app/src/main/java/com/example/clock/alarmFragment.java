@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,26 +33,34 @@ import java.util.Calendar;
       TextView tv;
     private Switch btn;
     private static final String TAG = "alarmFragment";
+    private Calendar c1;
+    private String text;
+    private boolean check;
+    public static final String SHARED_PREFS="shared-prefs";
+    public static final String TEXT="text";
+    public static final String SWITCH_ON_OFF="switch_on_off";
       int hour;
       int minute;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
         View view = inflater.inflate(R.layout.alarms, container, false);
 getActivity().setTitle("Alarms");
 
-Calendar c=Calendar.getInstance();
- hour=c.get(Calendar.HOUR_OF_DAY);
- minute=c.get(Calendar.MINUTE);
+
         tv = view.findViewById(R.id.timeText);
         btn=view.findViewById(R.id.switch_on_off);
-        tv.setText( ""+hour+":"+minute);
+        loadData();
+        Update();
 
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
         DialogFragment df=new TimePicker();
+                ((TimePicker)df).setTimeListener(alarmFragment.this);
         df.show(getFragmentManager(),"time picker");
             }
         });
@@ -59,9 +68,12 @@ Calendar c=Calendar.getInstance();
             @Override
             public void onClick(View v) {
                 if(btn.isChecked()){
+
                     Toast.makeText(getContext(),"Alarm set",Toast.LENGTH_SHORT).show();
+                    startAlarm(c1);
                 }
                 else{
+
                     cancelAlarm();
                     Toast.makeText(getContext(), "Alarm Cancelled", Toast.LENGTH_SHORT).show();
                 }
@@ -73,12 +85,14 @@ Calendar c=Calendar.getInstance();
 
       @Override
       public void onTimeSet(android.widget.TimePicker view, int hourOfDay, int minute) {
+        Log.i(TAG,"alarm");
           Calendar calendar=Calendar.getInstance();
           calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
           calendar.set(Calendar.MINUTE,minute);
           calendar.set(Calendar.SECOND,0);
           updateTimeText(calendar);
-          startAlarm(calendar);
+          c1=calendar;
+
 
       }
       private void updateTimeText(Calendar c){
@@ -100,6 +114,35 @@ Calendar c=Calendar.getInstance();
           Toast.makeText(getContext(),"Alarm Cancelled",Toast.LENGTH_SHORT);
       }
 
+      public void saveData(){
+          SharedPreferences sharedPreferences= getActivity().getSharedPreferences(SHARED_PREFS,Context.MODE_PRIVATE);
+          SharedPreferences.Editor editor=sharedPreferences.edit();
+          editor.putString(TEXT,tv.getText().toString());
+          editor.putBoolean(SWITCH_ON_OFF,btn.isChecked());
+          editor.apply();
+      }
+      public void loadData(){
+          SharedPreferences sharedPreferences= getActivity().getSharedPreferences(SHARED_PREFS,Context.MODE_PRIVATE);
+          text=sharedPreferences.getString(TEXT,"00:00");
+          check=sharedPreferences.getBoolean(SWITCH_ON_OFF,false);
 
+      }
+      public void Update(){
+        tv.setText(text);
+        btn.setChecked(check);
+      }
 
-}
+      @Override
+      public void onDestroyView() {
+
+          super.onDestroyView();
+          saveData();
+      }
+
+      @Override
+      public void onDestroy() {
+
+          super.onDestroy();
+          saveData();
+      }
+  }
