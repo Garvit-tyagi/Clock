@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/one"
+    android:title="Ringtone1"
+    />
+    <item
+        android:id="@+id/two"
+        android:title="Ringtone2"
+        />
+    <item
+        android:id="@+id/three"
+        android:title="Ringtone3"
+        />
+    <item
+        android:id="@+id/four"
+        android:title="Ringtone4"
+        />
+    <item
+        android:id="@+id/five"
+        android:title="Ringtone5"
+        />
+</menu>

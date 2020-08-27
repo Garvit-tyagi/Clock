@@ -32,64 +32,10 @@
         android:layout_margin="16dp"
         android:layout_alignParentRight="true"/>
 
-    <LinearLayout
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/sunday"
-            android:padding="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="S"
-            android:textSize="30dp"/>
-        <TextView
-            android:id="@+id/monday"
-            android:padding="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="M"
-            android:textSize="30dp"/>
-        <TextView
-            android:id="@+id/tuesday"
-            android:padding="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="S"
-            android:textSize="30dp"/>
-
-        <TextView
-            android:id="@+id/wednesday"
-            android:padding="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="W"
-            android:textSize="30dp"/>
-        <TextView
-            android:id="@+id/thrusday"
-            android:padding="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Th"
-            android:textSize="30dp"/>
-        <TextView
-            android:id="@+id/friday"
-            android:padding="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="F"
-            android:textSize="30dp"/>
-        <TextView
-            android:id="@+id/saturday"
-            android:padding="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="S"
-            android:textSize="30dp"/>
 
 
-    </LinearLayout>
+
+
 
 
 </RelativeLayout>

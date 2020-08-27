@@ -2,6 +2,7 @@ package com.example.clock;
 
 import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -10,6 +11,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,7 +31,9 @@ import androidx.fragment.app.FragmentManager;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-  public class alarmFragment extends Fragment implements TimePickerDialog.OnTimeSetListener {
+import static android.content.Context.NOTIFICATION_SERVICE;
+
+public class alarmFragment extends Fragment implements TimePickerDialog.OnTimeSetListener {
 
 
       TextView tv;
@@ -39,12 +45,13 @@ import java.util.Calendar;
     public static final String SHARED_PREFS="shared-prefs";
     public static final String TEXT="text";
     public static final String SWITCH_ON_OFF="switch_on_off";
+    public static final String ID="id";
+    public static  int id=1;
       int hour;
       int minute;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
 
         View view = inflater.inflate(R.layout.alarms, container, false);
 getActivity().setTitle("Alarms");
@@ -52,8 +59,7 @@ getActivity().setTitle("Alarms");
 
         tv = view.findViewById(R.id.timeText);
         btn=view.findViewById(R.id.switch_on_off);
-        loadData();
-        Update();
+
 
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +85,15 @@ getActivity().setTitle("Alarms");
                 }
             }
         });
+
+        loadData();
+        Update();
+        NotificationManager manager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
+        assert manager != null;
+        manager.cancel(1);
+        if(AlertReciever.mediaPlayer!=null){
+            AlertReciever.mediaPlayer.release();
+        btn.setChecked(false);}
         return view;
     }
 
@@ -100,10 +115,14 @@ getActivity().setTitle("Alarms");
         tv.setText(timeText);
       }
       private void startAlarm(Calendar c){
+        if(c!=null){
           AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
           Intent i=new Intent(getContext(),AlertReciever.class);
           PendingIntent pi=PendingIntent.getBroadcast(getContext(),1,i,0);
-          alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pi);
+          alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pi);}
+        else{
+            Toast.makeText(getContext(),"SET TIME",Toast.LENGTH_SHORT);
+        }
 
       }
       private void cancelAlarm(){
@@ -115,29 +134,33 @@ getActivity().setTitle("Alarms");
       }
 
       public void saveData(){
-          SharedPreferences sharedPreferences= getActivity().getSharedPreferences(SHARED_PREFS,Context.MODE_PRIVATE);
+        Log.i(TAG,"saved");
+          SharedPreferences sharedPreferences= getActivity().getApplicationContext().getSharedPreferences(SHARED_PREFS,Context.MODE_PRIVATE);
           SharedPreferences.Editor editor=sharedPreferences.edit();
           editor.putString(TEXT,tv.getText().toString());
           editor.putBoolean(SWITCH_ON_OFF,btn.isChecked());
+          editor.putInt(ID,id);
           editor.apply();
+          Log.i(TAG,tv.getText().toString());
       }
       public void loadData(){
-          SharedPreferences sharedPreferences= getActivity().getSharedPreferences(SHARED_PREFS,Context.MODE_PRIVATE);
+        Log.i(TAG,"loaded");
+
+          SharedPreferences sharedPreferences= getActivity().getApplicationContext().getSharedPreferences(SHARED_PREFS,Context.MODE_PRIVATE);
           text=sharedPreferences.getString(TEXT,"00:00");
           check=sharedPreferences.getBoolean(SWITCH_ON_OFF,false);
+          id=sharedPreferences.getInt(ID,1);
+          Log.i(TAG,text);
+
 
       }
       public void Update(){
+        Log.i(TAG,"updated");
         tv.setText(text);
         btn.setChecked(check);
       }
 
-      @Override
-      public void onDestroyView() {
 
-          super.onDestroyView();
-          saveData();
-      }
 
       @Override
       public void onDestroy() {
@@ -145,4 +168,43 @@ getActivity().setTitle("Alarms");
           super.onDestroy();
           saveData();
       }
-  }
+
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        switch(item.getItemId()){
+//            case R.id.one:
+//                id=1;
+//                Toast.makeText(getContext(),"Ringtone 1 selected",Toast.LENGTH_SHORT).show();
+//
+//                return  true;
+//
+//            case R.id.two:
+//                id=2;
+//                Toast.makeText(getContext(),"Ringtone 2 selected",Toast.LENGTH_SHORT).show();
+//                return  true;
+//            case R.id.three:
+//                id=3;
+//                Toast.makeText(getContext(),"Ringtone 3 selected",Toast.LENGTH_SHORT).show();
+//                return  true;
+//            case R.id.four:
+//                id=4;
+//                Toast.makeText(getContext(),"Ringtone 4 selected",Toast.LENGTH_SHORT).show();
+//                return  true;
+//            case R.id.five:
+//                id=5;
+//                Toast.makeText(getContext(),"Ringtone 5 selected",Toast.LENGTH_SHORT).show();
+//                return  true;
+//                default:
+//                    id=1;
+//                    return super.onOptionsItemSelected(item);
+//        }
+//
+//    }
+//
+//    @Override
+//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+//
+//        inflater.inflate(R.menu.ringtones_menu,menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
+}
