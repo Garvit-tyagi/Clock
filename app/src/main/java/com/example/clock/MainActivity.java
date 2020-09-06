@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private alarmFragment af;
     public static final String ID = "id";
     public static int id = 1;
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.two:
                 id = 2;
+                Log.i(TAG,""+id);
                 Toast.makeText(this, "Ringtone 2 selected", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.three:
