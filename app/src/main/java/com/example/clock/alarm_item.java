@@ -19,6 +19,18 @@ private String alarm_atatus;
         return time;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setAlarm_atatus(String alarm_atatus) {
+        this.alarm_atatus = alarm_atatus;
+    }
+
     public String  getAlarm_atatus() {
         return alarm_atatus;
     }
