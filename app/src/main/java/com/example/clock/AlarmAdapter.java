@@ -29,9 +29,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     private static final String TAG = "AlarmAdapter";
     private ArrayList<alarm_item> alarmArrayList;
 AlarmViewHolder vh;
-int position;
+int Position;
     private Context context;
-    private Calendar c;
+
     private Calendar c2;
     int hour;
     int min;
@@ -52,8 +52,8 @@ int position;
     @Override
     public void onBindViewHolder(@NonNull final AlarmAdapter.AlarmViewHolder holder, final int position) {
         holder.timeText.setText(alarmArrayList.get(position).getTime());
-vh=holder;
-this.position=position;
+
+
         hour=newAlarm.getHour();
         min=newAlarm.getMin();
         c2=Calendar.getInstance();
@@ -90,6 +90,8 @@ this.position=position;
             @Override
             public void onClick(View v) {
                 clicked=true;
+                vh=holder;
+                Position=position;
                 Calendar calendar = Calendar.getInstance();
                 hour = calendar.get(Calendar.HOUR_OF_DAY);
                 min = calendar.get(Calendar.MINUTE);
@@ -179,11 +181,12 @@ this.position=position;
           calendar.set(Calendar.MINUTE,minute);
           calendar.set(Calendar.SECOND,0);
 
-           setTime(vh,position,calendar);
+           setTime(vh,Position,calendar);
 
       }
 
     private void setTime(AlarmViewHolder viewholder, int position, Calendar calendar) {
+        Log.i(TAG,"position "+position);
         String timeText= java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(calendar.getTime());
         alarmArrayList.get(position).setTime(timeText);
         viewholder.timeText.setText(alarmArrayList.get(position).getTime());
